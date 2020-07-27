@@ -7,6 +7,7 @@ const { getPutBodyIsAllowed } = require('./util')
 dotenv.config()
 
 const app = express()
+app.use(express.urlencoded({extended: true}));
 app.use(express.json())
 
 const port = process.env.PORT || 3000
@@ -15,6 +16,37 @@ const uri = process.env.DATABASE_URI
 
 app.post('/api/books', function(request, response) {
   // Make this work!
+
+  const client = new mongodb.MongoClient(uri);
+
+  client.connect(() => {
+    const db = client.db("literature");
+    const collection = db.collection("books");
+
+    const book = {}
+
+    if(request.query.title) {
+      book.title = request.query.title
+    }
+    if(request.query.author) {
+      book.author = request.query.author
+    }
+    if(request.query.author_birth_year) {
+     book.author_birth_year = Number(request.query.author_birth_year)
+    }
+    if(request.query.author_death_year) {
+      book.author_death_year = Number(request.query.author_death_year)
+    }
+    if(request.query.url) {
+      book.url = request.query.url
+    }
+
+    collection.insertOne(book, (error, result) => {
+      response.send(error || result.ops[0])
+      client.close()
+    })
+
+  }) 
 })
 
 app.delete('/api/books/:id', function(request, response) {
