@@ -9,7 +9,7 @@ Read classic books online!
 2. Add your database URI and a port number like this:
 
    ```sh
-   DATABASE_URI=mongodb+srv://xxxx:xxxx@cluster0-xxxx.mongodb.net
+   DATABASE_URI=mongodb+srv://xxxx:xxxx@cluster0.xxxx.mongodb.net
    PORT=3000
    ```
 
